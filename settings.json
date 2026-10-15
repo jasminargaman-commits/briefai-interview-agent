@@ -1,0 +1,6 @@
+{
+  "max_turns": 25,
+  "max_judge_follow_ups": 2,
+  "include_supplementary": true,
+  "max_output_tokens": {"judge": 4000, "synthesis": 32000}
+}

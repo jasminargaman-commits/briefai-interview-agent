@@ -1,0 +1,406 @@
+{
+  "source": "yasmin-website/dist/brief-questions.js",
+  "note": "Verbatim extraction. Archived and retired questions excluded. Only added fields: section, status.",
+  "sections": [
+    {
+      "id": "about",
+      "title": "העסק שלכם",
+      "heading": "קצת יותר על העסק שלכם.",
+      "lead": "בהמשך לשיחה שלנו, אשמח להכיר לעומק את העסק ואת מה שחשוב לכם באתר. פירוט ודוגמאות יעזרו לי לדייק את הכיוון.",
+      "more": "פרטים שמילאתם קודם",
+      "nextLabel": "ממשיכים למטרות האתר",
+      "questions": [
+        {
+          "id": "name",
+          "type": "text",
+          "label": "שם מלא",
+          "required": true,
+          "autocomplete": "name",
+          "placeholder": "איך קוראים לכם?",
+          "section": "about",
+          "status": "core"
+        },
+        {
+          "id": "business",
+          "type": "text",
+          "label": "שם העסק",
+          "required": true,
+          "autocomplete": "organization",
+          "placeholder": "שם העסק או המותג",
+          "section": "about",
+          "status": "core"
+        },
+        {
+          "id": "what",
+          "type": "textarea",
+          "label": "מה העסק שלכם עושה?",
+          "help": "",
+          "placeholder": "ספרו על השירותים או המוצרים המרכזיים, למי הם מיועדים ומה מייחד את העסק.",
+          "rows": 3,
+          "section": "about",
+          "status": "core"
+        }
+      ]
+    },
+    {
+      "id": "goals",
+      "title": "האתר שלכם",
+      "heading": "מה האתר שלכם צריך לעשות?",
+      "lead": "חשבו על התוצאות שתרצו להשיג ועל הלקוחות שתרצו להגיע אליהם.",
+      "more": "אתר קיים, שפות וחיבורים",
+      "nextLabel": "ממשיכים לעיצוב",
+      "questions": [
+        {
+          "id": "goals",
+          "type": "multi",
+          "max": 2,
+          "label": "מה תרצו שהאתר יעשה בשבילכם?",
+          "help": "בחרו עד שתי מטרות שהכי חשובות לעסק.",
+          "other": true,
+          "options": [
+            "שיפנו אליי ויקבעו שיחה",
+            "למכור מוצרים באתר",
+            "שיקבעו תור לבד",
+            "להציג עבודות ופרויקטים",
+            "שיבינו שאפשר לסמוך עליי",
+            "לתת מידע ולחסוך שאלות חוזרות"
+          ],
+          "layout": "cards",
+          "section": "goals",
+          "status": "core"
+        },
+        {
+          "id": "customer",
+          "type": "textarea",
+          "label": "למי האתר מיועד?",
+          "help": "",
+          "placeholder": "מי הלקוחות המרכזיים שלכם, מה הם מחפשים ומה חשוב להם בבחירה?",
+          "rows": 3,
+          "section": "goals",
+          "status": "core"
+        },
+        {
+          "id": "features",
+          "type": "multi",
+          "label": "צריכים גם משהו מאלה?",
+          "help": "סמנו מה רלוונטי. אם אינכם בטוחים, אפשר להשאיר פתוח.",
+          "options": [
+            "קביעת תורים",
+            "תשלום באתר",
+            "חנות",
+            "רשימת תפוצה",
+            "אזור אישי",
+            "כמה שפות"
+          ],
+          "section": "goals",
+          "status": "core"
+        },
+        {
+          "id": "links",
+          "type": "textarea",
+          "rows": 2,
+          "label": "קישור לאתר או לרשת חברתית",
+          "help": "",
+          "dir": "auto",
+          "placeholder": "אפשר להדביק כאן קישור",
+          "supplementary": true,
+          "section": "goals",
+          "status": "supplementary"
+        },
+        {
+          "id": "languages",
+          "type": "multi",
+          "label": "באילו שפות האתר צריך להיות?",
+          "other": true,
+          "options": [
+            "עברית",
+            "אנגלית",
+            "ערבית",
+            "רוסית"
+          ],
+          "supplementary": true,
+          "section": "goals",
+          "status": "supplementary"
+        },
+        {
+          "id": "tools",
+          "type": "textarea",
+          "rows": 2,
+          "label": "יש מערכת שתרצו לחבר לאתר?",
+          "help": "",
+          "placeholder": "ציינו את שם המערכת ומה תרצו שיעבור בינה לבין האתר.",
+          "supplementary": true,
+          "section": "goals",
+          "status": "supplementary"
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "title": "כיוון עיצובי",
+      "heading": "איזו אווירה מתאימה לאתר שלכם?",
+      "lead": "שתפו בסגנונות ובאתרים שאתם אוהבים. אם עדיין אין כיוון, אפשר לציין זאת.",
+      "more": "צבעים והעדפות נוספות",
+      "nextLabel": "ממשיכים לפרטים האחרונים",
+      "questions": [
+        {
+          "id": "style",
+          "type": "cards",
+          "label": "איזה כיוון מדבר אליכם?",
+          "options": [
+            {
+              "value": "נקי ומינימלי",
+              "hint": "הרבה אוויר, מעט צבע",
+              "preview": "minimal"
+            },
+            {
+              "value": "חם וטבעי",
+              "hint": "גוונים רכים ופינות מעוגלות",
+              "preview": "warm"
+            },
+            {
+              "value": "צבעוני ונועז",
+              "hint": "צבעים חזקים וטקסט גדול",
+              "preview": "bold"
+            },
+            {
+              "value": "אלגנטי ויוקרתי",
+              "hint": "רקע כהה ופרטים מעודנים",
+              "preview": "elegant"
+            },
+            {
+              "value": "עוד לא יודעים",
+              "hint": "נגלה יחד"
+            }
+          ],
+          "help": "",
+          "section": "design",
+          "status": "core"
+        },
+        {
+          "id": "logoAsset",
+          "type": "choice",
+          "label": "יש לכם לוגו לשילוב באתר?",
+          "help": "הלוגו מסופק על ידכם. השירות אינו כולל עיצוב לוגו או מיתוג.",
+          "options": [
+            "יש לוגו מוכן",
+            "בעיצוב אצל גורם אחר",
+            "אין לוגו"
+          ],
+          "section": "design",
+          "status": "core"
+        },
+        {
+          "id": "inspiration",
+          "type": "list",
+          "label": "יש אתר שאהבתם?",
+          "help": "",
+          "addLabel": "עוד אתר להשראה",
+          "itemLabel": "אתר",
+          "max": 5,
+          "fields": [
+            {
+              "key": "url",
+              "label": "קישור לאתר",
+              "placeholder": "https://",
+              "inputType": "url",
+              "dir": "ltr"
+            },
+            {
+              "key": "note",
+              "label": "מה אהבתם בו?",
+              "type": "textarea",
+              "rows": 3,
+              "placeholder": "למשל: הצבעים, מבנה העמוד או הצגת המוצרים"
+            }
+          ],
+          "section": "design",
+          "status": "core"
+        },
+        {
+          "id": "colorsStatus",
+          "type": "choice",
+          "label": "יש צבעים שתרצו לשלב באתר?",
+          "options": [
+            "יש צבעי מותג מוגדרים",
+            "יש כיוון, לא משהו סגור",
+            "פתוחים לגמרי להצעות"
+          ],
+          "supplementary": true,
+          "section": "design",
+          "status": "supplementary"
+        },
+        {
+          "id": "colors",
+          "type": "colors",
+          "max": 4,
+          "label": "אילו צבעים?",
+          "help": "אפשר לבחור עד ארבעה צבעים.",
+          "addLabel": "הוספת צבע",
+          "showIf": {
+            "id": "colorsStatus",
+            "in": [
+              "יש צבעי מותג מוגדרים",
+              "יש כיוון, לא משהו סגור"
+            ]
+          },
+          "supplementary": true,
+          "section": "design",
+          "status": "supplementary"
+        },
+        {
+          "id": "colorsAvoid",
+          "type": "text",
+          "label": "יש צבעים שאתם לא רוצים לראות באתר?",
+          "placeholder": "למשל: בלי ורוד ובלי שחור",
+          "supplementary": true,
+          "section": "design",
+          "status": "supplementary"
+        }
+      ]
+    },
+    {
+      "id": "content",
+      "title": "לקראת ההתחלה",
+      "heading": "עוד כמה פרטים, וסיימנו.",
+      "lead": "נתאם את תחילת העבודה ונקבע מסגרת ברורה עד למסירה.",
+      "process": {
+        "title": "מסגרת העבודה שלנו",
+        "items": [
+          {
+            "title": "כשבוע בנייה",
+            "text": "לאתר פשוט, לאחר סיכום אפיון וקבלת החומרים."
+          },
+          {
+            "title": "סבב שיפורים אחד",
+            "text": "עד שבוע נוסף להתאמות מתוך הערות מרוכזות. סבב שני בתיאום מראש."
+          },
+          {
+            "title": "חודש לדיווח על תקלות",
+            "text": "ממועד המסירה. ללא תחזוקה שוטפת או עדכוני תוכן."
+          }
+        ],
+        "note": "מועדי ההתחלה והמסירה ייקבעו בהצעת המחיר לפי היקף האתר."
+      },
+      "more": "פרטי דומיין",
+      "shortTitle": "לסיום",
+      "questions": [
+        {
+          "id": "texts",
+          "type": "choice",
+          "label": "יש כבר טקסטים לאתר?",
+          "options": [
+            "יש טקסטים מוכנים",
+            "נכתוב בעצמנו",
+            "יש מי שיכתוב בשבילנו",
+            "עוד לא יודעים"
+          ],
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "photos",
+          "type": "multi",
+          "label": "ומה לגבי תמונות?",
+          "options": [
+            "יש צילומים מקצועיים",
+            "יש תמונות טובות מהטלפון",
+            "מתכננים צילום מקצועי",
+            "צריך תמונות ממאגר (סטוק)",
+            "עוד לא יודעים"
+          ],
+          "help": "אפשר לבחור כמה מקורות לתמונות.",
+          "exclusive": [
+            "עוד לא יודעים"
+          ],
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "materialsReady",
+          "type": "choice",
+          "label": "מתי תוכלו להעביר את כל החומרים לאתר?",
+          "help": "טקסטים, תמונות ולוגו, אם יש.",
+          "options": [
+            "החומרים מוכנים",
+            "בתוך שבוע",
+            "נרצה לתאם תאריך"
+          ],
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "materialsDate",
+          "type": "text",
+          "label": "מתי החומרים צפויים להיות מוכנים?",
+          "placeholder": "ציינו תאריך משוער ומה עוד חסר",
+          "showIf": {
+            "id": "materialsReady",
+            "in": [
+              "נרצה לתאם תאריך"
+            ]
+          },
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "deadline",
+          "type": "text",
+          "label": "יש תאריך השקה שחשוב לקחת בחשבון?",
+          "placeholder": "אם יש, ציינו תאריך וסיבה — למשל פתיחת סניף",
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "extra",
+          "type": "textarea",
+          "label": "עוד משהו שחשוב שאדע?",
+          "placeholder": "בקשות מיוחדות, מגבלות או פרטים מהשיחה שחשוב לקחת בחשבון",
+          "rows": 2,
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "contact",
+          "type": "contact",
+          "label": "פרטי קשר להמשך",
+          "help": "מספיק למלא טלפון או מייל.",
+          "required": true,
+          "section": "content",
+          "status": "core"
+        },
+        {
+          "id": "domain",
+          "type": "choice",
+          "label": "יש לכם כתובת (דומיין) לאתר?",
+          "help": "הכתובת שמקלידים בדפדפן, למשל mybusiness.co.il",
+          "options": [
+            "יש",
+            "אין עדיין",
+            "לא בטוחים"
+          ],
+          "supplementary": true,
+          "section": "content",
+          "status": "supplementary"
+        },
+        {
+          "id": "domainName",
+          "type": "text",
+          "label": "מה הכתובת?",
+          "placeholder": "mybusiness.co.il",
+          "dir": "ltr",
+          "inputType": "url",
+          "showIf": {
+            "id": "domain",
+            "in": [
+              "יש"
+            ]
+          },
+          "supplementary": true,
+          "section": "content",
+          "status": "supplementary"
+        }
+      ]
+    }
+  ]
+}

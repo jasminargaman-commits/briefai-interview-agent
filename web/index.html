@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>שאלון אפיון</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <span class="brand">יסמין טורג׳מן</span>
+      <span class="caption">שאלון אפיון</span>
+      <button type="button" class="answers-toggle" id="answers-toggle" aria-controls="answers" aria-expanded="false" hidden>
+        התשובות שלי <span id="answers-count"></span>
+      </button>
+    </div>
+    <div class="progress" id="progress" hidden>
+      <p class="progress-label" id="progress-label"></p>
+      <ol class="steps" id="steps" aria-label="התקדמות"></ol>
+    </div>
+  </header>
+
+  <main class="stage" id="stage" aria-live="polite"></main>
+
+  <aside class="answers" id="answers" hidden aria-label="התשובות שלי">
+    <div class="answers-head">
+      <h2>התשובות שלי</h2>
+      <button type="button" class="link" id="answers-close">סגירה</button>
+    </div>
+    <div id="answers-list"></div>
+    <button type="button" class="link restart" id="restart">התחלה מחדש</button>
+  </aside>
+</body>
+</html>
