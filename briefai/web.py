@@ -11,7 +11,7 @@ import os
 import re
 import secrets
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 from dotenv import load_dotenv
@@ -86,6 +86,53 @@ def _finished():
         from vercel.functions import RuntimeCache
         _clients["finished"] = RuntimeCache(namespace="briefai-finished")
     return _clients["finished"]
+
+
+def _usage():
+    """LLM call counters that live outside the signed state, so replaying an
+    old state can't reset them: per interview (state.id) and per UTC day.
+    Same Runtime Cache as _finished() (per region on Vercel; in memory locally)."""
+    if "usage" not in _clients:
+        from vercel.functions import RuntimeCache
+        _clients["usage"] = RuntimeCache(namespace="briefai-usage")
+    return _clients["usage"]
+
+
+def _spend(interview: str, calls: int = 1) -> bool:
+    """Counts `calls` LLM calls for today and, when given, for this interview.
+    False (nothing counted) when a cap would be passed — the caller goes on
+    without the LLM. Not atomic: parallel requests may slip a few calls past."""
+    caps = [(f"day-{datetime.now(UTC):%Y-%m-%d}", cfg.settings["max_llm_calls_per_day"], 2 * 24 * 3600)]
+    if interview:
+        caps.append((f"interview-{interview}", cfg.settings["max_llm_calls_per_interview"], 7 * 24 * 3600))
+    try:
+        usage = _usage()
+        counts = [int(usage.get(key) or 0) for key, _, _ in caps]
+        if any(n + calls > cap for n, (_, cap, _) in zip(counts, caps, strict=True)):
+            return False
+        for n, (key, _, ttl) in zip(counts, caps, strict=True):
+            usage.set(key, n + calls, {"ttl": ttl})
+    except Exception as e:  # no counter → no LLM; the interview still goes on
+        log.error("usage cache failed: %s", type(e).__name__)
+        return False
+    return True
+
+
+def _metered(state: State):
+    """Judge and explainer under the call caps. Over a cap the judge accepts
+    every answer (as for a flagged interview) and the explainer falls back to
+    the engine's fixed text."""
+    judge, explain = _judge(), _explain()
+
+    def metered_judge(system: str, exchange: str) -> Verdict:
+        return judge(system, exchange) if _spend(state.id) else _accept_all(system, exchange)
+
+    def metered_explain(system: str, message: str) -> str:
+        if not _spend(state.id):
+            raise RuntimeError("LLM call cap reached")
+        return explain(system, message)
+
+    return metered_judge, metered_explain
 
 
 def _synthesis():
@@ -197,6 +244,7 @@ class StartIn(BaseModel):
 def start(body: StartIn | None = None):
     state = engine.start()
     state.started_at = time.time()
+    state.id = secrets.token_hex(16)
     state.demo = bool(body and body.demo)
     return view(state)
 
@@ -228,7 +276,7 @@ def step(body: StepIn):
         return view(engine.submit(state, cfg, action, None))
     if state.flagged:  # the interview goes on as usual, but no LLM calls
         return view(engine.submit(state, cfg, action, _accept_all))
-    return view(engine.submit(state, cfg, action, _judge(), _explain()))
+    return view(engine.submit(state, cfg, action, *_metered(state)))
 
 
 def _accept_all(system: str, exchange: str) -> Verdict:
@@ -249,10 +297,10 @@ async def finish(body: Signed, background: BackgroundTasks):
         return {"ok": True}
     if state.demo:  # shared for feedback: no brief, no email
         return {"ok": True}
-    finished = _finished()
-    if await asyncio.to_thread(finished.get, body.sig):
+    finished, key = _finished(), state.id or body.sig  # once per interview, whatever state is sent
+    if await asyncio.to_thread(finished.get, key):
         return {"ok": True}
-    await asyncio.to_thread(finished.set, body.sig, True, {"ttl": 7 * 24 * 3600})
+    await asyncio.to_thread(finished.set, key, True, {"ttl": 7 * 24 * 3600})
     if ON_VERCEL:  # keeps the function alive after the response (BackgroundTasks may not)
         from vercel.functions import wait_until
         wait_until(asyncio.to_thread(_finish_in_background, state, body.sig))
@@ -264,7 +312,7 @@ async def finish(body: Signed, background: BackgroundTasks):
 def _finish_in_background(state: State, sig: str) -> None:
     """Brief + build prompt, then the email to Yasmin. Locally the files are also
     saved to transcripts/ (on Vercel the disk is read-only — the email is the copy).
-    The answers go out even if the brief fails."""
+    The answers go out even if the brief fails or the daily LLM cap is reached."""
     local = not ON_VERCEL
     out = None
     if local:
@@ -275,6 +323,8 @@ def _finish_in_background(state: State, sig: str) -> None:
 
     result, error = None, None
     try:
+        if not _spend("", 2):  # brief + build prompt; the daily cap only — finish runs once per interview
+            raise RuntimeError("daily LLM call cap reached")
         synthesize, write = _synthesis()
         brief = synthesis.write_brief(state, cfg, synthesize)
         try:

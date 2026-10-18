@@ -67,6 +67,7 @@ class State(BaseModel):
     started_at: float = 0  # web: when the interview was opened (bot check: min fill time)
     flagged: bool = False  # web: looks like a bot — no LLM calls, nothing sent
     demo: bool = False  # web: demo link (?demo) — the interview runs, finish writes and sends nothing
+    id: str = ""  # web: random interview id — LLM call caps are counted by it, so replays don't reset them
     transcript: list[Event] = []
 
 

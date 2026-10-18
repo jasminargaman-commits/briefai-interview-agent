@@ -1,5 +1,6 @@
 import asyncio
 
+import pytest
 import vercel.functions
 from fastapi.testclient import TestClient
 
@@ -18,6 +19,17 @@ sent_mail: list[dict] = []
 web._clients["mail"] = lambda payload, key=None: sent_mail.append(payload)  # never a real email from tests
 web.MIN_FILL_SECONDS = 0  # tests answer the form instantly; the bot tests set it back
 client = TestClient(web.app)
+
+
+class MemoryCache(dict):
+    def set(self, key, value, options=None):
+        self[key] = value
+
+
+@pytest.fixture(autouse=True)
+def fresh_usage(monkeypatch):
+    """Each test starts with no LLM calls counted (today or per interview)."""
+    monkeypatch.setitem(web._clients, "usage", MemoryCache())
 
 
 def finished_interview(*names):
@@ -217,3 +229,56 @@ def test_demo_runs_but_sends_nothing(tmp_path, monkeypatch):
     assert not real["state"]["demo"]
     r = client.post("/api/view", json={"state": {**real["state"], "demo": True}, "sig": real["sig"]})
     assert r.status_code == 409
+
+
+def at_first_open_question():
+    v = client.post("/api/start").json()
+    for value in ("דנה", "סטודיו", "cap@example.com"):
+        v = step(v, type="reply", value=value)
+    assert v["prompt"]["qid"] == "what"
+    return v
+
+
+def counting_judge(monkeypatch):
+    calls = []
+    judge = web._clients["judge"]
+    monkeypatch.setitem(web._clients, "judge", lambda *args: calls.append(1) or judge(*args))
+    return calls
+
+
+def test_replays_hit_the_interview_cap(monkeypatch):
+    monkeypatch.setitem(web.cfg.settings, "max_llm_calls_per_interview", 3)
+    calls = counting_judge(monkeypatch)
+    v = at_first_open_question()
+    # the same signed state, sent again and again: the turn budget in it resets, the cap doesn't
+    kinds = [step(v, type="reply", value="אני מאמנת")["prompt"]["kind"] for _ in range(6)]
+    assert len(calls) == 3 and kinds == ["follow_up"] * 3 + ["question"] * 3
+    # another interview has its own cap
+    assert step(at_first_open_question(), type="reply", value="אני מאמנת")["prompt"]["kind"] == "follow_up"
+    assert len(calls) == 4
+
+
+def test_daily_cap_keeps_the_interview_going(monkeypatch):
+    monkeypatch.setitem(web.cfg.settings, "max_llm_calls_per_day", 1)
+    calls = counting_judge(monkeypatch)
+    assert step(at_first_open_question(), type="reply", value="אני מאמנת")["prompt"]["kind"] == "follow_up"
+    v = step(at_first_open_question(), type="reply", value="אני מאמנת")  # over today's cap: no judge
+    assert len(calls) == 1 and v["prompt"]["kind"] == "question" and v["prompt"]["qid"] != "what"
+    assert v["state"]["answers"]["what"]["value"] == "אני מאמנת"
+
+
+def test_over_daily_cap_finish_still_emails_the_answers(tmp_path, monkeypatch):
+    monkeypatch.setattr(web, "ROOT", tmp_path)
+    monkeypatch.setitem(web.cfg.settings, "max_llm_calls_per_day", 0)
+
+    def no_llm(*args):
+        raise AssertionError("no synthesis over the daily cap")
+
+    monkeypatch.setitem(web._clients, "synthesis", (no_llm, no_llm))
+    v = finished_interview("דנה", "סטודיו", "overcap@example.com")
+    before = len(sent_mail)
+    assert client.post("/api/finish", json={"state": v["state"], "sig": v["sig"]}).json() == {"ok": True}
+    assert len(sent_mail) == before + 1
+    mail = sent_mail[-1]  # the raw answers, flagged as "no brief"
+    assert mail["subject"].startswith("⚠️") and [a["filename"] for a in mail["attachments"]] == ["transcript.json"]
+    assert (list((tmp_path / "transcripts").iterdir())[0] / "error.txt").exists()

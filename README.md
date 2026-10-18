@@ -50,9 +50,11 @@ back later.
 3. **Client control.** Clients can skip any question (the agent comes back
    to skipped ones once at the end), say "don't know", or edit any earlier
    answer. Editing a choice answer re-evaluates which questions are relevant.
-4. **Cost and length cap.** A configurable cap limits how many LLM-judged
-   turns an interview can use, which keeps cost predictable. When it runs
-   out, the remaining questions are still asked, just without follow-ups.
+4. **Cost and length caps.** A configurable cap limits how many LLM-judged
+   turns an interview can use, and separate caps limit LLM calls per
+   interview and per day, counted outside the client's state so they can't
+   be reset. When a cap is reached, the remaining questions are still asked,
+   just without follow-ups.
 5. **Review.** The client sees all their answers and confirms or edits them.
 6. **Brief.** One LLM call writes the internal brief, structured per
    `brief_template.md`: summary, scope flags, open items for the next call.
@@ -129,7 +131,7 @@ cp .env.example .env      # add your OpenAI key and model names
 uv sync
 uv run python -m briefai                       # interview in the terminal
 uv run uvicorn briefai.web:app --port 8765     # web chat at http://localhost:8765
-uv run pytest                                  # 52 tests, no API calls
+uv run pytest                                  # 55 tests, no API calls
 ```
 
 Locally, interviews and briefs are saved to `transcripts/` (gitignored).
@@ -155,10 +157,10 @@ integration, each step tested before the next.
 
 ## What I'd improve next
 
-- **Stronger cost controls for a public link.** Today the link goes only
-  to clients I've spoken with, behind per-IP rate limits and a hard spend
-  limit on the API key. Before publishing it openly, I'd add an overall
-  daily cap and a per-interview limit on LLM calls.
+- **A public demo link.** Cost controls are in place: per-IP rate limits,
+  LLM call caps per interview and per day, and a hard spend limit on the
+  API key. Today the link goes only to clients I've spoken with; the next
+  step is linking the existing demo mode (which sends nothing) from here.
 - **An evaluation set.** Simulated clients (vague, terse, detailed) run
   through the interview automatically, to tune the judge and the cost
   cap with data rather than by hand.

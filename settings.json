@@ -1,5 +1,7 @@
 {
   "max_turns": 25,
+  "max_llm_calls_per_interview": 60,
+  "max_llm_calls_per_day": 500,
   "max_judge_follow_ups": 2,
   "include_supplementary": true,
   "max_output_tokens": {"judge": 4000, "synthesis": 32000}
