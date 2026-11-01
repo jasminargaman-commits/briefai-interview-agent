@@ -1,8 +1,9 @@
 # BriefAI
 
-An interview agent that turns a conversation with a new web-design client
+An LLM workflow that turns a conversation with a new web-design client
 into a structured design brief, a ready-to-use build prompt, and an email
-in my inbox.
+in my inbox. It is deliberately not an agent: the code runs a fixed
+interview loop, and the LLM only judges answers and writes the brief.
 
 <p align="center">
   <img src="docs/demo.gif" alt="BriefAI interview demo: a vague answer gets a follow-up question from the LLM judge" width="360">
@@ -47,7 +48,7 @@ back later.
      looks like (`intents.json`). If the answer is vague, it asks one
      targeted follow-up, at most two per question.
    - Some questions appear only when an earlier answer makes them relevant.
-3. **Client control.** Clients can skip any question (the agent comes back
+3. **Client control.** Clients can skip any question (the interview comes back
    to skipped ones once at the end), say "don't know", or edit any earlier
    answer. Editing a choice answer re-evaluates which questions are relevant.
 4. **Cost and length caps.** A configurable cap limits how many LLM-judged
@@ -74,9 +75,9 @@ back later.
 ```mermaid
 flowchart TD
     C[Client browser<br/>chat page on my site] -->|same-origin| P[Site proxy<br/>/api/agent/*<br/>rate limits per IP]
-    P -->|shared key header| A[BriefAI agent<br/>FastAPI on Vercel]
+    P -->|shared key header| A[BriefAI app<br/>FastAPI on Vercel]
 
-    subgraph Agent
+    subgraph BriefAI
         A --> E[Interview engine<br/>stateless: state in, state out]
         E -->|open answers only| J[LLM judge]
         A -->|after confirm, in background| S[LLM synthesis<br/>brief + scope flags]
@@ -104,7 +105,7 @@ follow-ups, prompts, templates and UI text are all JSON/Markdown files. The
 same engine could run a different interview without code changes.
 
 The site proxy and chat page live in my website's repo. This repo holds the
-agent, a local copy of the chat UI (`web/`), and a CLI.
+BriefAI app, a local copy of the chat UI (`web/`), and a CLI.
 
 ## Where the LLM is used and where it isn't
 

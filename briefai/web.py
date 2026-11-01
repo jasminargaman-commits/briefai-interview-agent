@@ -218,7 +218,7 @@ async def limit_body(request: Request, call_next):
 
 @app.middleware("http")
 async def only_from_site(request: Request, call_next):
-    """On Vercel the agent answers only the site's /api/agent proxy, which sends
+    """On Vercel the app answers only the site's /api/agent proxy, which sends
     the project's bypass secret (Deployment Protection → Protection Bypass for
     Automation; Vercel exposes it as VERCEL_AUTOMATION_BYPASS_SECRET). The
     project's public *.vercel.app address isn't covered by Vercel's protection,

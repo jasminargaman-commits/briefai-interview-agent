@@ -43,7 +43,7 @@ def print_skipped(state: State, cfg: Config) -> None:
 def print_transcript(state: State) -> None:
     print("\n" + "=" * 20 + " תמליל " + "=" * 20)
     for e in state.transcript:
-        who = {"agent": "סוכן", "client": "לקוח", "system": "  ·"}[e.role]
+        who = {"agent": "BriefAI", "client": "לקוח", "system": "  ·"}[e.role]
         print(f"{who}: {e.text}")
     print(f"\nתורות שנוצלו: {state.turns_used}")
 

@@ -1,7 +1,7 @@
 [project]
 name = "briefai"
 version = "0.1.0"
-description = "Interview agent that turns a client conversation into a structured website design brief."
+description = "LLM interview workflow that turns a client conversation into a structured website design brief."
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.142.2",

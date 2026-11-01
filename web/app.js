@@ -4,8 +4,8 @@
 // only classes and CSSOM.
 
 const KEY = 'briefai.v1';
-// Where the agent's API lives: /api/ locally, /api/agent/ inside the site
-// (<html data-api="/api/agent/">, the site's proxy to the agent project).
+// Where the BriefAI API lives: /api/ locally, /api/agent/ inside the site
+// (<html data-api="/api/agent/">, the site's proxy to the BriefAI project).
 const API = document.documentElement.dataset.api || '/api/';
 const OTHER = 'אחר';
 const MIN_THINKING = 600;   // ms — no flash of the shimmer
